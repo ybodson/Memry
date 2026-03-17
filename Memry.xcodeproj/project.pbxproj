@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FFF458262F677519000350EE /* MajorSystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = FFF458252F677519000350EE /* MajorSystemKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FFF457F62F677356000350EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF458262F677519000350EE /* MajorSystemKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = Memry;
 			packageProductDependencies = (
+				FFF458252F677519000350EE /* MajorSystemKit */,
 			);
 			productName = Memry;
 			productReference = FFF457E42F677355000350EE /* Memry.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = FFF457DB2F677355000350EE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FFF458242F677519000350EE /* XCRemoteSwiftPackageReference "MajorSystemKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FFF457E52F677355000350EE /* Products */;
 			projectDirPath = "";
@@ -630,6 +639,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FFF458242F677519000350EE /* XCRemoteSwiftPackageReference "MajorSystemKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:ybodson/MajorSystemKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FFF458252F677519000350EE /* MajorSystemKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FFF458242F677519000350EE /* XCRemoteSwiftPackageReference "MajorSystemKit" */;
+			productName = MajorSystemKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FFF457DC2F677355000350EE /* Project object */;
 }

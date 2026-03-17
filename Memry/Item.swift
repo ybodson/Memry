@@ -1,10 +1,3 @@
-//
-//  Item.swift
-//  Memry
-//
-//  Created by Yann Bodson on 16/3/2026.
-//
-
 import Foundation
 import SwiftData
 
