@@ -1,144 +1,55 @@
 import SwiftUI
-import SwiftData
-import MajorSystemKit
-
-extension MajorEntry: @retroactive Identifiable {
-    public var id: String {
-        "\(self.majorCode)_\(self.word)"
-    }
-}
-
-private struct Breadcrumb: Identifiable {
-    let id: String
-    let word: String
-    let code: String
-
-    init(word: String, code: String) {
-        self.word = word
-        self.code = code
-        self.id = "\(code)_\(word)"
-    }
-}
+import Observation
 
 struct CreateNumber: View {
-    @State private var entriesByCode: [String: [MajorEntry]] = [:]
-    @State private var textInput: String = ""
-    @State private var breadcrumbs: [Breadcrumb] = []
-    @State private var isScrollGestureActive = false
-
-    private var matchingEntryGroups: [(code: String, entries: [MajorEntry])] {
-        var groups: [(code: String, entries: [MajorEntry])] = []
-        var currentCode = textInput
-
-        while currentCode.isEmpty == false {
-            if let entries = entriesByCode[currentCode], entries.isEmpty == false {
-                groups.append((code: currentCode, entries: entries))
-            }
-
-            currentCode.removeLast()
-        }
-
-        return groups
-    }
+    @State private var viewModel = CreateNumberViewModel()
+    private let topScrollID = "create-number-top"
 
     var body: some View {
-        NavigationStack {
-            if entriesByCode.isEmpty {
-                ProgressView()
-            } else {
+        @Bindable var bindableViewModel = viewModel
+
+        return NavigationStack {
+            content(textInput: $bindableViewModel.textInput)
+                .navigationTitle("Number")
+        }
+        .task {
+            await viewModel.loadEntriesIfNeeded()
+        }
+    }
+
+    @ViewBuilder
+    private func content(textInput: Binding<String>) -> some View {
+        if viewModel.isLoading {
+            ProgressView()
+        } else if let errorMessage = viewModel.errorMessage {
+            ContentUnavailableView("Unable to Load Numbers", systemImage: "exclamationmark.triangle", description: Text(errorMessage))
+        } else {
+            ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        if breadcrumbs.isEmpty == false {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Breadcrumbs")
-                                    .font(.headline)
+                        Color.clear
+                            .frame(height: 0)
+                            .id(topScrollID)
 
-                                TagFlowLayout(spacing: 8) {
-                                    ForEach(Array(breadcrumbs.enumerated()), id: \.element.id) { index, breadcrumb in
-                                        VStack(spacing: 4) {
-                                            HStack(alignment: .top, spacing: 6) {
-                                                ZStack(alignment: .topTrailing) {
-                                                    Text(breadcrumb.word)
-                                                        .font(.subheadline)
-                                                        .padding(.horizontal, 12)
-                                                        .padding(.vertical, 8)
-                                                        .background {
-                                                            Capsule()
-                                                                .fill(Color.accentColor.opacity(0.14))
-                                                        }
-                                                        .overlay {
-                                                            Capsule()
-                                                                .stroke(Color.accentColor.opacity(0.2), lineWidth: 1)
-                                                        }
-
-                                                    if index == breadcrumbs.count - 1 {
-                                                        Button(action: removeLastBreadcrumb) {
-                                                            Image(systemName: "xmark.circle.fill")
-                                                                .font(.body)
-                                                                .foregroundStyle(.secondary)
-                                                                .background(Color(.systemBackground), in: Circle())
-                                                        }
-                                                        .buttonStyle(.plain)
-                                                        .offset(x: 6, y: -6)
-                                                    }
-                                                }
-
-                                                if index < breadcrumbs.count - 1 {
-                                                    Image(systemName: "arrow.right")
-                                                        .font(.caption.weight(.semibold))
-                                                        .foregroundStyle(.secondary)
-                                                }
-                                            }
-
-                                            Text(breadcrumb.code)
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    }
-                                }
-                            }
+                        if viewModel.breadcrumbs.isEmpty == false {
+                            BreadcrumbsSection(
+                                breadcrumbs: viewModel.breadcrumbs,
+                                onDeleteLast: viewModel.removeLastBreadcrumb
+                            )
                         }
 
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Enter number")
-                                .font(.headline)
-                        TextField("Number", text: self.$textInput)
-                            .keyboardType(.numberPad)
-                                .textFieldStyle(.roundedBorder)
-                        }
+                        NumberInputSection(textInput: textInput)
 
-                        if matchingEntryGroups.isEmpty == false {
+                        if viewModel.matchingEntryGroups.isEmpty == false {
                             VStack(alignment: .leading, spacing: 16) {
-                                ForEach(matchingEntryGroups, id: \.code) { group in
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(group.code)
-                                            .font(.headline)
-
-                                        TagFlowLayout(spacing: 8) {
-                                            ForEach(group.entries) { entry in
-                                                Button {
-                                                    guard isScrollGestureActive == false else {
-                                                        return
-                                                    }
-
-                                                    select(entry.word, for: group.code)
-                                                } label: {
-                                                    Text(entry.word)
-                                                        .font(.subheadline)
-                                                        .padding(.horizontal, 12)
-                                                        .padding(.vertical, 8)
-                                                        .background {
-                                                            Capsule()
-                                                                .fill(Color.secondary.opacity(0.14))
-                                                        }
-                                                        .overlay {
-                                                            Capsule()
-                                                                .stroke(Color.secondary.opacity(0.18), lineWidth: 1)
-                                                        }
-                                                }
-                                                .buttonStyle(.plain)
-                                            }
-                                        }
+                                ForEach(viewModel.matchingEntryGroups) { group in
+                                    EntryGroupSection(
+                                        group: group,
+                                        isTapEnabled: viewModel.isScrollGestureActive == false
+                                    ) { index in
+                                        let entry = group.entries[index]
+                                        viewModel.select(entry, in: group)
+                                        scrollToTop(using: proxy)
                                     }
                                 }
                             }
@@ -147,44 +58,28 @@ struct CreateNumber: View {
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .scrollDismissesKeyboard(.immediately)
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { _ in
-                            isScrollGestureActive = true
+                            viewModel.beginScrollGesture()
                         }
                         .onEnded { _ in
                             Task {
-                                try? await Task.sleep(for: .milliseconds(150))
-                                isScrollGestureActive = false
+                                await viewModel.endScrollGesture()
                             }
                         }
                 )
-                .navigationTitle("Number")
-            }
-        }
-        .task {
-            do {
-                let index = try MajorIndexLoader.loadBundledIndex()
-                self.entriesByCode = index.entriesByCode
-            } catch {
-                print(error)
             }
         }
     }
 
-    private func select(_ word: String, for code: String) {
-        guard textInput.hasPrefix(code) else {
-            return
-        }
+    private func scrollToTop(using proxy: ScrollViewProxy) {
+        var transaction = Transaction()
+        transaction.animation = nil
 
-        breadcrumbs.append(Breadcrumb(word: word, code: code))
-        textInput.removeFirst(code.count)
-    }
-
-    private func removeLastBreadcrumb() {
-        guard let breadcrumb = breadcrumbs.popLast() else {
-            return
+        withTransaction(transaction) {
+            proxy.scrollTo(topScrollID, anchor: .top)
         }
-        textInput = breadcrumb.code + textInput
     }
 }

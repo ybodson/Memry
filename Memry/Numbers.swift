@@ -2,7 +2,6 @@ import SwiftUI
 
 struct Numbers: View {
     @State private var isShowingCreateNumber = false
-    private var numbers: [String] = []
 
     var body: some View {
         NavigationStack {
