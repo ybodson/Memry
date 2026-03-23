@@ -5,7 +5,7 @@ import SwiftData
 struct MemryApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Numbers()
         }
     }
 }
