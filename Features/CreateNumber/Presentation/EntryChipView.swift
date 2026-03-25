@@ -1,8 +1,7 @@
-import MajorSystemKit
 import SwiftUI
 
 struct EntryChipView: View {
-    let entry: MajorEntry
+    let entry: MnemonicEntry
     let isTapEnabled: Bool
     let onSelect: () -> Void
 
@@ -20,11 +19,11 @@ struct EntryChipView: View {
                 .padding(.vertical, 8)
                 .background {
                     Capsule()
-                        .fill(Color.secondary.opacity(0.14))
+                        .fill(Color(.systemBackground))
                 }
                 .overlay {
                     Capsule()
-                        .stroke(Color.secondary.opacity(0.18), lineWidth: 1)
+                        .stroke(Color.primary.opacity(0.12), lineWidth: 1)
                 }
         }
         .buttonStyle(.plain)

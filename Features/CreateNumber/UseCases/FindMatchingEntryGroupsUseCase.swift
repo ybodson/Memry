@@ -1,9 +1,9 @@
-import MajorSystemKit
+import Foundation
 
-struct PrefixMajorEntryMatcher: MajorEntryMatching {
-    func matchingGroups(
+struct FindMatchingEntryGroupsUseCase: Sendable {
+    func execute(
         for textInput: String,
-        entriesByCode: [String: [MajorEntry]]
+        entriesByCode: [String: [MnemonicEntry]]
     ) -> [MatchingEntryGroup] {
         var groups: [MatchingEntryGroup] = []
         var currentCode = textInput

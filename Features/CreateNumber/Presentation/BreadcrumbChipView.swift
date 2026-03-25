@@ -8,19 +8,20 @@ struct BreadcrumbChipView: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            HStack(alignment: .top, spacing: 6) {
+            HStack(alignment: .center, spacing: 6) {
                 ZStack(alignment: .topTrailing) {
                     Text(breadcrumb.word)
                         .font(.subheadline)
+                        .foregroundStyle(Color(.label))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
                         .background {
                             Capsule()
-                                .fill(Color.accentColor.opacity(0.14))
+                                .fill(Color(.systemBackground))
                         }
                         .overlay {
                             Capsule()
-                                .stroke(Color.accentColor.opacity(0.2), lineWidth: 1)
+                                .stroke(Color.primary.opacity(0.12), lineWidth: 1)
                         }
 
                     if showsDeleteButton {
@@ -39,12 +40,15 @@ struct BreadcrumbChipView: View {
                     Image(systemName: "arrow.right")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
+                        .frame(maxHeight: .infinity, alignment: .center)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .center)
 
             Text(breadcrumb.code)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .center)
         }
     }
 }

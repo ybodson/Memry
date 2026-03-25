@@ -1,6 +1,6 @@
 import Foundation
 
-struct Breadcrumb: Identifiable, Equatable {
+struct Breadcrumb: Identifiable, Equatable, Sendable {
     let id: String
     let word: String
     let code: String

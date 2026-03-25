@@ -2,8 +2,12 @@ import SwiftUI
 import Observation
 
 struct CreateNumber: View {
-    @State private var viewModel = CreateNumberViewModel()
+    @State private var viewModel: CreateNumberViewModel
     private let topScrollID = "create-number-top"
+
+    init(viewModel: CreateNumberViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         @Bindable var bindableViewModel = viewModel
@@ -59,6 +63,7 @@ struct CreateNumber: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .scrollDismissesKeyboard(.immediately)
+                .background(Color(.systemGroupedBackground))
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 10)
                         .onChanged { _ in

@@ -19,7 +19,7 @@ struct Numbers: View {
             }
         }
         .sheet(isPresented: $isShowingCreateNumber) {
-            CreateNumber()
+            CreateNumberFeature.makeView()
         }
     }
 }
