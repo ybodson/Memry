@@ -3,9 +3,9 @@ import SwiftData
 
 @Model
 final class PersistedNumberComposition {
-    @Relationship(deleteRule: .cascade)
-    var breadcrumbs: [PersistedBreadcrumb]
-    var createdAt: Date
+    @Relationship(deleteRule: .cascade, inverse: \PersistedBreadcrumb.composition)
+    var breadcrumbs: [PersistedBreadcrumb]?
+    var createdAt: Date = Date()
 
     init(breadcrumbs: [PersistedBreadcrumb], createdAt: Date) {
         self.breadcrumbs = breadcrumbs

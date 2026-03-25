@@ -19,7 +19,7 @@ struct SwiftDataNumberCompositionRepository: NumberCompositionRepository {
     }
 
     private func toDomain(_ persisted: PersistedNumberComposition) -> NumberComposition {
-        let breadcrumbs = persisted.breadcrumbs
+        let breadcrumbs = (persisted.breadcrumbs ?? [])
             .sorted { $0.order < $1.order }
             .map { Breadcrumb(word: $0.word, code: $0.code) }
         return NumberComposition(textInput: "", breadcrumbs: breadcrumbs)

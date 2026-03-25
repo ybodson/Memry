@@ -7,8 +7,12 @@ struct MemryApp: App {
 
     init() {
         do {
+            let configuration = ModelConfiguration(
+                cloudKitDatabase: .private("iCloud.frogmojo.Memry")
+            )
             modelContainer = try ModelContainer(
-                for: PersistedNumberComposition.self, PersistedBreadcrumb.self
+                for: PersistedNumberComposition.self, PersistedBreadcrumb.self,
+                configurations: configuration
             )
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
