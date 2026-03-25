@@ -3,7 +3,14 @@ import Observation
 
 @Observable
 final class CreateNumberViewModel {
-    var textInput: String = ""
+    var textInput: String = "" {
+        didSet {
+            let normalized = textInput.filter(\.isNumber)
+            if textInput != normalized {
+                textInput = normalized
+            }
+        }
+    }
     private(set) var breadcrumbs: [Breadcrumb] = []
     var isLoading = true
     var errorMessage: String?
@@ -15,14 +22,20 @@ final class CreateNumberViewModel {
         self.repository = repository
     }
 
+    var canSave: Bool {
+        !breadcrumbs.isEmpty && textInput.isEmpty
+    }
+
     var matchingEntryGroups: [MatchingEntryGroup] {
         currentComposition.matchingEntryGroups(entriesByCode: entriesByCode)
     }
 
     func loadEntriesIfNeeded() async {
-        guard isLoading, entriesByCode.isEmpty else {
+        guard isLoading || entriesByCode.isEmpty else {
             return
         }
+
+        isLoading = true
 
         do {
             entriesByCode = try repository.loadEntriesByCode()
@@ -32,6 +45,14 @@ final class CreateNumberViewModel {
         }
 
         isLoading = false
+    }
+
+    func retryLoading() async {
+        guard entriesByCode.isEmpty else {
+            return
+        }
+
+        await loadEntriesIfNeeded()
     }
 
     func select(_ entry: MnemonicEntry, in group: MatchingEntryGroup) {

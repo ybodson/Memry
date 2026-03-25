@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CreateNumber: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var viewModel: CreateNumberViewModel
     private let topScrollID = "create-number-top"
 
@@ -13,7 +14,26 @@ struct CreateNumber: View {
 
         return NavigationStack {
             content(textInput: $bindableViewModel.textInput)
-                .navigationTitle("Number")
+                .navigationTitle("New Number")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button {
+                            print("saved")
+                            dismiss()
+                        } label: {
+                            Image(systemName: "checkmark")
+                        }
+                        .buttonStyle(.glassProminent)
+                        .disabled(!viewModel.canSave)
+                    }
+                }
         }
         .task {
             await viewModel.loadEntriesIfNeeded()
@@ -25,7 +45,17 @@ struct CreateNumber: View {
         if viewModel.isLoading {
             ProgressView()
         } else if let errorMessage = viewModel.errorMessage {
-            ContentUnavailableView("Unable to Load Numbers", systemImage: "exclamationmark.triangle", description: Text(errorMessage))
+            ContentUnavailableView {
+                Label("Unable to Load Numbers", systemImage: "exclamationmark.triangle")
+            } description: {
+                Text(errorMessage)
+            } actions: {
+                Button("Retry") {
+                    Task {
+                        await viewModel.retryLoading()
+                    }
+                }
+            }
         } else {
             ScrollViewReader { proxy in
                 ScrollView {
