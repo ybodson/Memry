@@ -75,6 +75,87 @@ struct MemryTests {
     }
 }
 
+// MARK: - NumbersViewModel Tests
+
+struct NumbersViewModelTests {
+    @MainActor @Test func loadCompositionsPopulatesList() {
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        let repository = StubNumberCompositionRepository(compositions: [composition])
+        let viewModel = NumbersViewModel(repository: repository)
+
+        viewModel.loadCompositions()
+
+        #expect(viewModel.compositions.count == 1)
+        #expect(viewModel.compositions[0].number == "12")
+        #expect(viewModel.compositions[0].phrase == "tin")
+        #expect(viewModel.errorMessage == nil)
+    }
+
+    @MainActor @Test func loadCompositionsSetsErrorOnFailure() {
+        let repository = StubNumberCompositionRepository(fetchError: StubNumberCompositionRepository.testError)
+        let viewModel = NumbersViewModel(repository: repository)
+
+        viewModel.loadCompositions()
+
+        #expect(viewModel.compositions.isEmpty)
+        #expect(viewModel.errorMessage != nil)
+    }
+
+    @MainActor @Test func saveAddsCompositionAndReloads() throws {
+        let repository = StubNumberCompositionRepository(compositions: [])
+        let viewModel = NumbersViewModel(repository: repository)
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+
+        try viewModel.save(composition)
+
+        #expect(repository.savedCompositions.count == 1)
+        #expect(viewModel.compositions.count == 1)
+    }
+
+    @MainActor @Test func saveThrowsOnFailure() {
+        let repository = StubNumberCompositionRepository(saveError: StubNumberCompositionRepository.testError)
+        let viewModel = NumbersViewModel(repository: repository)
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+
+        #expect(throws: StubNumberCompositionRepository.testError) {
+            try viewModel.save(composition)
+        }
+    }
+}
+
+@MainActor
+private final class StubNumberCompositionRepository: NumberCompositionRepository {
+    static let testError = NSError(domain: "MemryTests", code: 2, userInfo: [NSLocalizedDescriptionKey: "Repository error"])
+
+    private(set) var savedCompositions: [NumberComposition] = []
+    private var compositions: [NumberComposition]
+    private let fetchError: Error?
+    private let saveError: Error?
+
+    init(compositions: [NumberComposition] = [], fetchError: Error? = nil, saveError: Error? = nil) {
+        self.compositions = compositions
+        self.fetchError = fetchError
+        self.saveError = saveError
+    }
+
+    func fetchAll() throws -> [NumberComposition] {
+        if let fetchError { throw fetchError }
+        return compositions
+    }
+
+    func save(_ composition: NumberComposition) throws {
+        if let saveError { throw saveError }
+        savedCompositions.append(composition)
+        compositions.append(composition)
+    }
+
+    func delete(_ composition: NumberComposition) throws {
+        compositions.removeAll { $0.id == composition.id }
+    }
+}
+
+// MARK: - Test Helpers
+
 private struct StubMajorIndexRepository: MajorIndexRepository {
     let result: Result<[String: [MnemonicEntry]], Error>
 

@@ -10,15 +10,30 @@ struct Numbers: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(viewModel.compositions, id: \.self) { composition in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(composition.number)
-                            .font(.headline)
-                            .monospaced()
-                        Text(composition.phrase)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+            Group {
+                if viewModel.compositions.isEmpty {
+                    ContentUnavailableView(
+                        "No Numbers Yet",
+                        systemImage: "number",
+                        description: Text("Tap + to memorize your first number.")
+                    )
+                } else {
+                    List {
+                        ForEach(viewModel.compositions) { composition in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(composition.number)
+                                    .font(.headline)
+                                    .monospaced()
+                                Text(composition.phrase)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .onDelete { offsets in
+                            for index in offsets {
+                                viewModel.delete(viewModel.compositions[index])
+                            }
+                        }
                     }
                 }
             }

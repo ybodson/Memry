@@ -21,9 +21,14 @@ final class NumbersViewModel {
         }
     }
 
-    func save(_ composition: NumberComposition) {
+    func save(_ composition: NumberComposition) throws {
+        try repository.save(composition)
+        loadCompositions()
+    }
+
+    func delete(_ composition: NumberComposition) {
         do {
-            try repository.save(composition)
+            try repository.delete(composition)
             loadCompositions()
         } catch {
             errorMessage = error.localizedDescription

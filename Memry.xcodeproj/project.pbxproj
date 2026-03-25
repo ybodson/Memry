@@ -133,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35B02F72236500C83859 /* Presentation */,
+				FFA064D02F737F850074F698 /* Domain */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -152,7 +153,6 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35B52F72236C00C83859 /* Presentation */,
-				FFA064C42F736BF60074F698 /* Domain */,
 				FFA064C52F736BF60074F698 /* Data */,
 			);
 			path = Numbers;
@@ -186,10 +186,8 @@
 		FF3F35B22F72236B00C83859 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				FF3F35772F7222B900C83859 /* Breadcrumb.swift */,
 				FF3F35B62F72245700C83859 /* MatchingEntryGroup.swift */,
 				FF3F35B82F72245800C83859 /* MnemonicEntry.swift */,
-				FF3F35BA2F72245800C83859 /* NumberComposition.swift */,
 				FF3F35BC2F72245800C83859 /* MajorIndexRepository.swift */,
 			);
 			path = Domain;
@@ -212,14 +210,6 @@
 			path = Presentation;
 			sourceTree = "<group>";
 		};
-		FFA064C42F736BF60074F698 /* Domain */ = {
-			isa = PBXGroup;
-			children = (
-				FFA064C62F736BFA0074F698 /* NumberCompositionRepository.swift */,
-			);
-			path = Domain;
-			sourceTree = "<group>";
-		};
 		FFA064C52F736BF60074F698 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +218,16 @@
 				FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		FFA064D02F737F850074F698 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				FF3F35772F7222B900C83859 /* Breadcrumb.swift */,
+				FF3F35BA2F72245800C83859 /* NumberComposition.swift */,
+				FFA064C62F736BFA0074F698 /* NumberCompositionRepository.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		FFF457DB2F677355000350EE = {

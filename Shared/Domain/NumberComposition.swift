@@ -1,8 +1,15 @@
 import Foundation
 
-struct NumberComposition: Equatable, Hashable, Sendable {
+struct NumberComposition: Identifiable, Equatable, Sendable {
+    let id: UUID
     var textInput: String
     var breadcrumbs: [Breadcrumb]
+
+    init(id: UUID = UUID(), textInput: String, breadcrumbs: [Breadcrumb]) {
+        self.id = id
+        self.textInput = textInput
+        self.breadcrumbs = breadcrumbs
+    }
 
     var number: String {
         breadcrumbs.map(\.code).joined()
