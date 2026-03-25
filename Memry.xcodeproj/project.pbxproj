@@ -37,13 +37,6 @@
 			remoteGlobalIDString = FFF457E32F677355000350EE;
 			remoteInfo = Memry;
 		};
-		FFF458002F677356000350EE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FFF457DC2F677355000350EE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FFF457E32F677355000350EE;
-			remoteInfo = Memry;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -70,7 +63,6 @@
 		FFA064C32F735FF60074F698 /* ARCHITECTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE.md; sourceTree = "<group>"; };
 		FFF457E42F677355000350EE /* Memry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF457F52F677356000350EE /* MemryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FFF457FF2F677356000350EE /* MemryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -97,11 +89,6 @@
 			path = MemryTests;
 			sourceTree = "<group>";
 		};
-		FFF458022F677356000350EE /* MemryUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MemryUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,13 +101,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FFF457F22F677356000350EE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FFF457FC2F677356000350EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -152,7 +132,6 @@
 			children = (
 				FF3F35B12F72236B00C83859 /* Presentation */,
 				FF3F35B22F72236B00C83859 /* Domain */,
-				FF3F35B32F72236C00C83859 /* UseCases */,
 				FF3F35B42F72236C00C83859 /* Data */,
 				FF3F35C82F72245900C83859 /* CreateNumberFeature.swift */,
 			);
@@ -204,13 +183,6 @@
 			path = Domain;
 			sourceTree = "<group>";
 		};
-		FF3F35B32F72236C00C83859 /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
 		FF3F35B42F72236C00C83859 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,7 +206,6 @@
 				FFA064C32F735FF60074F698 /* ARCHITECTURE.md */,
 				FFF457E62F677355000350EE /* Memry */,
 				FFF457F82F677356000350EE /* MemryTests */,
-				FFF458022F677356000350EE /* MemryUITests */,
 				FFF457E52F677355000350EE /* Products */,
 				FF3F35AC2F72235D00C83859 /* Features */,
 				FF3F35AD2F72235D00C83859 /* Shared */,
@@ -246,7 +217,6 @@
 			children = (
 				FFF457E42F677355000350EE /* Memry.app */,
 				FFF457F52F677356000350EE /* MemryTests.xctest */,
-				FFF457FF2F677356000350EE /* MemryUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -300,29 +270,6 @@
 			productReference = FFF457F52F677356000350EE /* MemryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		FFF457FE2F677356000350EE /* MemryUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FFF458102F677356000350EE /* Build configuration list for PBXNativeTarget "MemryUITests" */;
-			buildPhases = (
-				FFF457FB2F677356000350EE /* Sources */,
-				FFF457FC2F677356000350EE /* Frameworks */,
-				FFF457FD2F677356000350EE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				FFF458012F677356000350EE /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				FFF458022F677356000350EE /* MemryUITests */,
-			);
-			name = MemryUITests;
-			packageProductDependencies = (
-			);
-			productName = MemryUITests;
-			productReference = FFF457FF2F677356000350EE /* MemryUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -337,10 +284,6 @@
 						CreatedOnToolsVersion = 26.3;
 					};
 					FFF457F42F677356000350EE = {
-						CreatedOnToolsVersion = 26.3;
-						TestTargetID = FFF457E32F677355000350EE;
-					};
-					FFF457FE2F677356000350EE = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = FFF457E32F677355000350EE;
 					};
@@ -365,7 +308,6 @@
 			targets = (
 				FFF457E32F677355000350EE /* Memry */,
 				FFF457F42F677356000350EE /* MemryTests */,
-				FFF457FE2F677356000350EE /* MemryUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -379,13 +321,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FFF457F32F677356000350EE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FFF457FD2F677356000350EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -428,13 +363,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FFF457FB2F677356000350EE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -442,11 +370,6 @@
 			isa = PBXTargetDependency;
 			target = FFF457E32F677355000350EE /* Memry */;
 			targetProxy = FFF457F62F677356000350EE /* PBXContainerItemProxy */;
-		};
-		FFF458012F677356000350EE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FFF457E32F677355000350EE /* Memry */;
-			targetProxy = FFF458002F677356000350EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -709,56 +632,6 @@
 			};
 			name = Release;
 		};
-		FFF458112F677356000350EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PHSYMJ6438;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = frogmojo.MemryUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = Memry;
-				XROS_DEPLOYMENT_TARGET = 26.2;
-			};
-			name = Debug;
-		};
-		FFF458122F677356000350EE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PHSYMJ6438;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = frogmojo.MemryUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = Memry;
-				XROS_DEPLOYMENT_TARGET = 26.2;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -785,15 +658,6 @@
 			buildConfigurations = (
 				FFF4580E2F677356000350EE /* Debug */,
 				FFF4580F2F677356000350EE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FFF458102F677356000350EE /* Build configuration list for PBXNativeTarget "MemryUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FFF458112F677356000350EE /* Debug */,
-				FFF458122F677356000350EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
