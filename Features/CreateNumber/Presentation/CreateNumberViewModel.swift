@@ -33,7 +33,7 @@ final class CreateNumberViewModel {
     }
 
     func loadEntriesIfNeeded() async {
-        guard isLoading || entriesByCode.isEmpty else {
+        guard entriesByCode.isEmpty else {
             return
         }
 

@@ -5,6 +5,7 @@
 //  Created by Yann Bodson on 16/3/2026.
 //
 
+import CoreData
 import Foundation
 import Testing
 @testable import Memry
@@ -89,6 +90,7 @@ struct NumbersViewModelTests {
         #expect(viewModel.compositions[0].number == "12")
         #expect(viewModel.compositions[0].phrase == "tin")
         #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.showsLoadingSkeleton == false)
     }
 
     @MainActor @Test func loadCompositionsSetsErrorOnFailure() {
@@ -101,15 +103,46 @@ struct NumbersViewModelTests {
         #expect(viewModel.errorMessage != nil)
     }
 
-    @MainActor @Test func saveAddsCompositionAndReloads() throws {
-        let repository = StubNumberCompositionRepository(compositions: [])
+    @MainActor @Test func saveAddsCompositionToFrontOfList() throws {
+        let existing = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "moon", code: "32")])
+        let repository = StubNumberCompositionRepository(compositions: [existing])
         let viewModel = NumbersViewModel(repository: repository)
-        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        viewModel.loadCompositions()
 
-        try viewModel.save(composition)
+        let newComposition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        try viewModel.save(newComposition)
 
         #expect(repository.savedCompositions.count == 1)
+        #expect(viewModel.compositions.count == 2)
+        #expect(viewModel.compositions[0].number == "12")
+        #expect(viewModel.compositions[1].number == "32")
+    }
+
+    @MainActor @Test func deleteRemovesCompositionFromList() {
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        let repository = StubNumberCompositionRepository(compositions: [composition])
+        let viewModel = NumbersViewModel(repository: repository)
+        viewModel.loadCompositions()
+
         #expect(viewModel.compositions.count == 1)
+
+        viewModel.delete(composition)
+
+        #expect(viewModel.compositions.isEmpty)
+    }
+
+    @MainActor @Test func emptyFetchKeepsSkeletonVisibleUntilInitialSyncSettles() {
+        let repository = StubNumberCompositionRepository(compositions: [])
+        let viewModel = NumbersViewModel(repository: repository)
+
+        viewModel.loadCompositions()
+
+        #expect(viewModel.compositions.isEmpty)
+        #expect(viewModel.showsLoadingSkeleton)
+
+        viewModel.finishInitialCloudSyncIfStillEmpty()
+
+        #expect(viewModel.showsLoadingSkeleton == false)
     }
 
     @MainActor @Test func saveThrowsOnFailure() {
@@ -121,6 +154,194 @@ struct NumbersViewModelTests {
             try viewModel.save(composition)
         }
     }
+
+    @MainActor @Test func deleteSetsErrorOnFailure() {
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        let repository = StubNumberCompositionRepository(compositions: [composition], deleteError: StubNumberCompositionRepository.testError)
+        let viewModel = NumbersViewModel(repository: repository)
+        viewModel.loadCompositions()
+
+        viewModel.delete(composition)
+
+        #expect(viewModel.errorMessage != nil)
+        #expect(viewModel.compositions.count == 1)
+    }
+}
+
+// MARK: - CloudKit Sync State Machine Tests
+
+struct CloudSyncTests {
+    @MainActor @Test func showsSkeletonBeforeFirstLoad() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+
+        #expect(viewModel.showsLoadingSkeleton)
+        #expect(viewModel.hasLoaded == false)
+        #expect(viewModel.isAwaitingInitialCloudSync)
+    }
+
+    @MainActor @Test func showsSkeletonAfterEmptyLoadWhileAwaitingSync() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+
+        viewModel.loadCompositions()
+
+        #expect(viewModel.hasLoaded)
+        #expect(viewModel.compositions.isEmpty)
+        #expect(viewModel.isAwaitingInitialCloudSync)
+        #expect(viewModel.showsLoadingSkeleton)
+    }
+
+    @MainActor @Test func hidesSkeletonWhenCompositionsLoadedEvenDuringSync() {
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
+
+        viewModel.loadCompositions()
+
+        #expect(viewModel.showsLoadingSkeleton == false)
+        #expect(viewModel.isAwaitingInitialCloudSync == false)
+    }
+
+    @MainActor @Test func handleCloudSyncEventIgnoresExportEvents() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        viewModel.loadCompositions()
+
+        let event = FakeCloudKitEvent(type: .export, endDate: Date(), error: nil)
+        viewModel.handleCloudSyncEvent(event)
+
+        #expect(viewModel.hasObservedCloudSyncEvent == false)
+    }
+
+    @MainActor @Test func handleCloudSyncEventTracksImportStart() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        viewModel.loadCompositions()
+
+        let event = FakeCloudKitEvent(type: .import, endDate: nil, error: nil)
+        viewModel.handleCloudSyncEvent(event)
+
+        #expect(viewModel.hasObservedCloudSyncEvent)
+        #expect(viewModel.isAwaitingInitialCloudSync)
+    }
+
+    @MainActor @Test func handleCloudSyncEventFinishesSyncOnImportEnd() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        viewModel.loadCompositions()
+
+        let event = FakeCloudKitEvent(type: .import, endDate: Date(), error: nil)
+        viewModel.handleCloudSyncEvent(event)
+
+        #expect(viewModel.hasObservedCloudSyncEvent)
+        #expect(viewModel.isAwaitingInitialCloudSync == false)
+    }
+
+    @MainActor @Test func handleCloudSyncEventCapturesSyncError() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        viewModel.loadCompositions()
+
+        let syncError = NSError(domain: "CloudKit", code: 1, userInfo: [NSLocalizedDescriptionKey: "Sync failed"])
+        let event = FakeCloudKitEvent(type: .setup, endDate: Date(), error: syncError)
+        viewModel.handleCloudSyncEvent(event)
+
+        #expect(viewModel.errorMessage == "Sync failed")
+    }
+
+    @MainActor @Test func finishInitialCloudSyncDoesNothingIfSyncEventObserved() {
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        viewModel.loadCompositions()
+
+        let event = FakeCloudKitEvent(type: .import, endDate: nil, error: nil)
+        viewModel.handleCloudSyncEvent(event)
+
+        viewModel.finishInitialCloudSyncIfStillEmpty()
+
+        #expect(viewModel.isAwaitingInitialCloudSync)
+    }
+
+    @MainActor @Test func finishInitialCloudSyncDoesNothingIfCompositionsExist() {
+        let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
+        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
+        viewModel.loadCompositions()
+
+        viewModel.finishInitialCloudSyncIfStillEmpty()
+
+        // isAwaitingInitialCloudSync was already set to false by loadCompositions since compositions exist
+        #expect(viewModel.isAwaitingInitialCloudSync == false)
+    }
+}
+
+// MARK: - Persistence Mapping Tests
+
+struct PersistenceMappingTests {
+    @Test func persistedNumberCompositionMapsToCorrectDomain() {
+        let breadcrumb1 = PersistedBreadcrumb(word: "tin", code: "12", order: 0)
+        let breadcrumb2 = PersistedBreadcrumb(word: "moon", code: "32", order: 1)
+        let compositionID = UUID()
+        let persisted = PersistedNumberComposition(
+            compositionID: compositionID,
+            breadcrumbs: [breadcrumb2, breadcrumb1],  // Intentionally out of order
+            createdAt: Date()
+        )
+
+        let domain = persisted.toDomain()
+
+        #expect(domain.id == compositionID)
+        #expect(domain.textInput == "")
+        #expect(domain.breadcrumbs.count == 2)
+        #expect(domain.breadcrumbs[0].word == "tin")
+        #expect(domain.breadcrumbs[0].code == "12")
+        #expect(domain.breadcrumbs[1].word == "moon")
+        #expect(domain.breadcrumbs[1].code == "32")
+    }
+
+    @Test func persistedNumberCompositionWithNilBreadcrumbsMapsToEmpty() {
+        let compositionID = UUID()
+        let persisted = PersistedNumberComposition(
+            compositionID: compositionID,
+            breadcrumbs: [],
+            createdAt: Date()
+        )
+        persisted.breadcrumbs = nil
+
+        let domain = persisted.toDomain()
+
+        #expect(domain.id == compositionID)
+        #expect(domain.breadcrumbs.isEmpty)
+    }
+
+    @Test func numberCompositionMapsToCorrectPersistedModel() {
+        let id = UUID()
+        let composition = NumberComposition(
+            id: id,
+            textInput: "",
+            breadcrumbs: [
+                Breadcrumb(word: "tin", code: "12"),
+                Breadcrumb(word: "moon", code: "32")
+            ]
+        )
+
+        let persisted = PersistedNumberComposition.fromDomain(composition)
+
+        #expect(persisted.compositionID == id)
+        #expect(persisted.breadcrumbs?.count == 2)
+        let sortedBreadcrumbs = (persisted.breadcrumbs ?? []).sorted { $0.order < $1.order }
+        #expect(sortedBreadcrumbs[0].word == "tin")
+        #expect(sortedBreadcrumbs[0].code == "12")
+        #expect(sortedBreadcrumbs[0].order == 0)
+        #expect(sortedBreadcrumbs[1].word == "moon")
+        #expect(sortedBreadcrumbs[1].code == "32")
+        #expect(sortedBreadcrumbs[1].order == 1)
+    }
+
+    @Test func numberAndPhraseDerivedCorrectlyFromBreadcrumbs() {
+        let composition = NumberComposition(
+            textInput: "56",
+            breadcrumbs: [
+                Breadcrumb(word: "tin", code: "12"),
+                Breadcrumb(word: "moon", code: "32")
+            ]
+        )
+
+        #expect(composition.number == "1232")
+        #expect(composition.phrase == "tin moon")
+    }
 }
 
 @MainActor
@@ -131,11 +352,13 @@ private final class StubNumberCompositionRepository: NumberCompositionRepository
     private var compositions: [NumberComposition]
     private let fetchError: Error?
     private let saveError: Error?
+    private let deleteError: Error?
 
-    init(compositions: [NumberComposition] = [], fetchError: Error? = nil, saveError: Error? = nil) {
+    init(compositions: [NumberComposition] = [], fetchError: Error? = nil, saveError: Error? = nil, deleteError: Error? = nil) {
         self.compositions = compositions
         self.fetchError = fetchError
         self.saveError = saveError
+        self.deleteError = deleteError
     }
 
     func fetchAll() throws -> [NumberComposition] {
@@ -150,6 +373,7 @@ private final class StubNumberCompositionRepository: NumberCompositionRepository
     }
 
     func delete(_ composition: NumberComposition) throws {
+        if let deleteError { throw deleteError }
         compositions.removeAll { $0.id == composition.id }
     }
 }
@@ -180,4 +404,10 @@ private final class RetryingMajorIndexRepository: MajorIndexRepository, @uncheck
             "12": [MnemonicEntry(code: "12", word: "tin")]
         ]
     }
+}
+
+private struct FakeCloudKitEvent: CloudSyncEvent {
+    let type: NSPersistentCloudKitContainer.EventType
+    let endDate: Date?
+    let error: (any Error)?
 }

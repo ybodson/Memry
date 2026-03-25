@@ -2,12 +2,8 @@ import SwiftUI
 
 struct CreateNumber: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel: CreateNumberViewModel
+    @State var viewModel: CreateNumberViewModel
     private let topScrollID = "create-number-top"
-
-    init(viewModel: CreateNumberViewModel) {
-        self.viewModel = viewModel
-    }
 
     var body: some View {
         @Bindable var bindableViewModel = viewModel

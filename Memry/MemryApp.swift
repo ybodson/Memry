@@ -3,31 +3,41 @@ import SwiftUI
 
 @main
 struct MemryApp: App {
-    let modelContainer: ModelContainer
+    static let cloudKitContainerID = "iCloud.frogmojo.Memry"
+
+    private let modelContainer: ModelContainer?
 
     init() {
         do {
             let configuration = ModelConfiguration(
-                cloudKitDatabase: .private("iCloud.frogmojo.Memry")
+                cloudKitDatabase: .private(Self.cloudKitContainerID)
             )
             modelContainer = try ModelContainer(
                 for: PersistedNumberComposition.self, PersistedBreadcrumb.self,
                 configurations: configuration
             )
         } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
+            modelContainer = nil
         }
     }
 
     var body: some Scene {
         WindowGroup {
-            Numbers(
-                viewModel: NumbersViewModel(
-                    repository: SwiftDataNumberCompositionRepository(
-                        modelContext: modelContainer.mainContext
+            if let modelContainer {
+                Numbers(
+                    viewModel: NumbersViewModel(
+                        repository: SwiftDataNumberCompositionRepository(
+                            modelContext: modelContainer.mainContext
+                        )
                     )
                 )
-            )
+            } else {
+                ContentUnavailableView(
+                    "Unable to Load Data",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("The app's database could not be initialized. Please restart the app or reinstall if the problem persists.")
+                )
+            }
         }
     }
 }
