@@ -1,8 +1,16 @@
 import Foundation
 
-struct NumberComposition: Equatable, Sendable {
+struct NumberComposition: Equatable, Hashable, Sendable {
     var textInput: String
     var breadcrumbs: [Breadcrumb]
+
+    var number: String {
+        breadcrumbs.map(\.code).joined()
+    }
+
+    var phrase: String {
+        breadcrumbs.map(\.word).joined(separator: " ")
+    }
 
     func selectingEntry(_ entry: MnemonicEntry, in group: MatchingEntryGroup) -> NumberComposition {
         guard textInput.hasPrefix(group.code) else {

@@ -26,6 +26,11 @@
 		FF3F35BD2F72245800C83859 /* MajorIndexRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35BC2F72245800C83859 /* MajorIndexRepository.swift */; };
 		FF3F35C72F72245900C83859 /* BundledMajorIndexRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C62F72245900C83859 /* BundledMajorIndexRepository.swift */; };
 		FF3F35C92F72245900C83859 /* CreateNumberFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C82F72245900C83859 /* CreateNumberFeature.swift */; };
+		FFA064C72F736BFA0074F698 /* NumberCompositionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064C62F736BFA0074F698 /* NumberCompositionRepository.swift */; };
+		FFA064C92F736C070074F698 /* PersistedBreadcrumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064C82F736C070074F698 /* PersistedBreadcrumb.swift */; };
+		FFA064CB2F736C080074F698 /* PersistedNumberComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CA2F736C080074F698 /* PersistedNumberComposition.swift */; };
+		FFA064CD2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */; };
+		FFA064CF2F736C3B0074F698 /* NumbersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */; };
 		FFF458262F677519000350EE /* MajorSystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = FFF458252F677519000350EE /* MajorSystemKit */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +66,11 @@
 		FF3F35C62F72245900C83859 /* BundledMajorIndexRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledMajorIndexRepository.swift; sourceTree = "<group>"; };
 		FF3F35C82F72245900C83859 /* CreateNumberFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNumberFeature.swift; sourceTree = "<group>"; };
 		FFA064C32F735FF60074F698 /* ARCHITECTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE.md; sourceTree = "<group>"; };
+		FFA064C62F736BFA0074F698 /* NumberCompositionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberCompositionRepository.swift; sourceTree = "<group>"; };
+		FFA064C82F736C070074F698 /* PersistedBreadcrumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedBreadcrumb.swift; sourceTree = "<group>"; };
+		FFA064CA2F736C080074F698 /* PersistedNumberComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedNumberComposition.swift; sourceTree = "<group>"; };
+		FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataNumberCompositionRepository.swift; sourceTree = "<group>"; };
+		FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersViewModel.swift; sourceTree = "<group>"; };
 		FFF457E42F677355000350EE /* Memry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF457F52F677356000350EE /* MemryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -142,6 +152,8 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35B52F72236C00C83859 /* Presentation */,
+				FFA064C42F736BF60074F698 /* Domain */,
+				FFA064C52F736BF60074F698 /* Data */,
 			);
 			path = Numbers;
 			sourceTree = "<group>";
@@ -195,8 +207,27 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35882F7222B900C83859 /* Numbers.swift */,
+				FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		FFA064C42F736BF60074F698 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				FFA064C62F736BFA0074F698 /* NumberCompositionRepository.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		FFA064C52F736BF60074F698 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				FFA064C82F736C070074F698 /* PersistedBreadcrumb.swift */,
+				FFA064CA2F736C080074F698 /* PersistedNumberComposition.swift */,
+				FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		FFF457DB2F677355000350EE = {
@@ -334,10 +365,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFA064C72F736BFA0074F698 /* NumberCompositionRepository.swift in Sources */,
+				FFA064CD2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift in Sources */,
 				FF3F358E2F7222B900C83859 /* Breadcrumb.swift in Sources */,
 				FF3F358F2F7222B900C83859 /* BreadcrumbChipView.swift in Sources */,
 				FF3F35902F7222B900C83859 /* BreadcrumbsSection.swift in Sources */,
 				FF3F35922F7222B900C83859 /* CreateNumber.swift in Sources */,
+				FFA064CB2F736C080074F698 /* PersistedNumberComposition.swift in Sources */,
 				FF3F35932F7222B900C83859 /* CreateNumberViewModel.swift in Sources */,
 				FF3F35C92F72245900C83859 /* CreateNumberFeature.swift in Sources */,
 				FF3F35942F7222B900C83859 /* EntryChipView.swift in Sources */,
@@ -347,11 +381,13 @@
 				FF3F35BB2F72245800C83859 /* NumberComposition.swift in Sources */,
 				FF3F359C2F7222B900C83859 /* NumberInputSection.swift in Sources */,
 				FF3F359D2F7222B900C83859 /* Numbers.swift in Sources */,
+				FFA064CF2F736C3B0074F698 /* NumbersViewModel.swift in Sources */,
 				FF3F35C72F72245900C83859 /* BundledMajorIndexRepository.swift in Sources */,
 				FF3F359F2F7222B900C83859 /* TagFlowLayout.swift in Sources */,
 				FF3F35BD2F72245800C83859 /* MajorIndexRepository.swift in Sources */,
 				FF3F35A02F7222B900C83859 /* TagFlowLayoutCache.swift in Sources */,
 				FF3F35A12F7222B900C83859 /* TagFlowLayoutElement.swift in Sources */,
+				FFA064C92F736C070074F698 /* PersistedBreadcrumb.swift in Sources */,
 				FF3F35A22F7222B900C83859 /* TagFlowLayoutRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

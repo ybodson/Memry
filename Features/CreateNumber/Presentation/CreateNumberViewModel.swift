@@ -17,9 +17,11 @@ final class CreateNumberViewModel {
 
     private var entriesByCode: [String: [MnemonicEntry]] = [:]
     private let repository: any MajorIndexRepository
+    private let onSave: (NumberComposition) -> Void
 
-    init(repository: any MajorIndexRepository) {
+    init(repository: any MajorIndexRepository, onSave: @escaping (NumberComposition) -> Void) {
         self.repository = repository
+        self.onSave = onSave
     }
 
     var canSave: Bool {
@@ -61,6 +63,11 @@ final class CreateNumberViewModel {
 
     func removeLastBreadcrumb() {
         apply(currentComposition.removingLastBreadcrumb())
+    }
+
+    func save() {
+        guard canSave else { return }
+        onSave(currentComposition)
     }
 
     private var currentComposition: NumberComposition {

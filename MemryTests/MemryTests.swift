@@ -11,7 +11,7 @@ import Testing
 
 struct MemryTests {
     @MainActor @Test func createNumberViewModelNormalizesTextInputToDigitsOnly() {
-        let viewModel = CreateNumberViewModel(repository: StubMajorIndexRepository(result: .success([:])))
+        let viewModel = CreateNumberViewModel(repository: StubMajorIndexRepository(result: .success([:])), onSave: { _ in })
 
         viewModel.textInput = "12a 3-4b"
 
@@ -20,7 +20,7 @@ struct MemryTests {
 
     @MainActor @Test func createNumberViewModelRetriesAfterLoadFailure() async {
         let repository = RetryingMajorIndexRepository()
-        let viewModel = CreateNumberViewModel(repository: repository)
+        let viewModel = CreateNumberViewModel(repository: repository, onSave: { _ in })
         viewModel.textInput = "12"
 
         await viewModel.loadEntriesIfNeeded()

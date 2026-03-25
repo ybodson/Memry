@@ -1,11 +1,11 @@
 import Foundation
 
 enum CreateNumberFeature {
-    static func makeView() -> CreateNumber {
-        CreateNumber(viewModel: makeViewModel())
+    static func makeView(onSave: @escaping (NumberComposition) -> Void) -> CreateNumber {
+        CreateNumber(viewModel: makeViewModel(onSave: onSave))
     }
 
-    static func makeViewModel() -> CreateNumberViewModel {
-        CreateNumberViewModel(repository: BundledMajorIndexRepository())
+    static func makeViewModel(onSave: @escaping (NumberComposition) -> Void) -> CreateNumberViewModel {
+        CreateNumberViewModel(repository: BundledMajorIndexRepository(), onSave: onSave)
     }
 }

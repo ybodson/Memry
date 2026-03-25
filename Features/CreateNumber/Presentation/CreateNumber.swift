@@ -25,7 +25,7 @@ struct CreateNumber: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button {
-                            print("saved")
+                            viewModel.save()
                             dismiss()
                         } label: {
                             Image(systemName: "checkmark")
