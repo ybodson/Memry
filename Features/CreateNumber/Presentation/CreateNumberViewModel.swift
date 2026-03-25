@@ -5,30 +5,18 @@ import Observation
 final class CreateNumberViewModel {
     var textInput: String = ""
     private(set) var breadcrumbs: [Breadcrumb] = []
-    var isScrollGestureActive = false
     var isLoading = true
     var errorMessage: String?
 
     private var entriesByCode: [String: [MnemonicEntry]] = [:]
-    private let loadMajorIndexUseCase: LoadMajorIndexUseCase
-    private let findMatchingEntryGroupsUseCase: FindMatchingEntryGroupsUseCase
-    private let selectEntryUseCase: SelectEntryUseCase
-    private let removeLastBreadcrumbUseCase: RemoveLastBreadcrumbUseCase
+    private let repository: any MajorIndexRepository
 
-    init(
-        loadMajorIndexUseCase: LoadMajorIndexUseCase,
-        findMatchingEntryGroupsUseCase: FindMatchingEntryGroupsUseCase,
-        selectEntryUseCase: SelectEntryUseCase,
-        removeLastBreadcrumbUseCase: RemoveLastBreadcrumbUseCase
-    ) {
-        self.loadMajorIndexUseCase = loadMajorIndexUseCase
-        self.findMatchingEntryGroupsUseCase = findMatchingEntryGroupsUseCase
-        self.selectEntryUseCase = selectEntryUseCase
-        self.removeLastBreadcrumbUseCase = removeLastBreadcrumbUseCase
+    init(repository: any MajorIndexRepository) {
+        self.repository = repository
     }
 
     var matchingEntryGroups: [MatchingEntryGroup] {
-        findMatchingEntryGroupsUseCase.execute(for: textInput, entriesByCode: entriesByCode)
+        currentComposition.matchingEntryGroups(entriesByCode: entriesByCode)
     }
 
     func loadEntriesIfNeeded() async {
@@ -37,7 +25,7 @@ final class CreateNumberViewModel {
         }
 
         do {
-            entriesByCode = try loadMajorIndexUseCase.execute()
+            entriesByCode = try repository.loadEntriesByCode()
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -47,26 +35,11 @@ final class CreateNumberViewModel {
     }
 
     func select(_ entry: MnemonicEntry, in group: MatchingEntryGroup) {
-        apply(
-            selectEntryUseCase.execute(
-                entry: entry,
-                in: group,
-                composition: currentComposition
-            )
-        )
+        apply(currentComposition.selectingEntry(entry, in: group))
     }
 
     func removeLastBreadcrumb() {
-        apply(removeLastBreadcrumbUseCase.execute(composition: currentComposition))
-    }
-
-    func beginScrollGesture() {
-        isScrollGestureActive = true
-    }
-
-    func endScrollGesture() async {
-        try? await Task.sleep(for: .milliseconds(150))
-        isScrollGestureActive = false
+        apply(currentComposition.removingLastBreadcrumb())
     }
 
     private var currentComposition: NumberComposition {

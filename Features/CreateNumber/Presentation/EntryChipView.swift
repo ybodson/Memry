@@ -2,17 +2,10 @@ import SwiftUI
 
 struct EntryChipView: View {
     let entry: MnemonicEntry
-    let isTapEnabled: Bool
     let onSelect: () -> Void
 
     var body: some View {
-        Button {
-            guard isTapEnabled else {
-                return
-            }
-
-            onSelect()
-        } label: {
+        Button(action: onSelect) {
             Text(entry.word)
                 .font(.subheadline)
                 .padding(.horizontal, 12)

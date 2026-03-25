@@ -1,13 +1,13 @@
 import Foundation
 
 struct Breadcrumb: Identifiable, Equatable, Sendable {
-    let id: String
+    let id: UUID
     let word: String
     let code: String
 
     init(word: String, code: String) {
+        self.id = UUID()
         self.word = word
         self.code = code
-        self.id = "\(code)_\(word)"
     }
 }

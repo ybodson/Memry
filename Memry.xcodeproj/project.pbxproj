@@ -24,10 +24,6 @@
 		FF3F35B92F72245800C83859 /* MnemonicEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35B82F72245800C83859 /* MnemonicEntry.swift */; };
 		FF3F35BB2F72245800C83859 /* NumberComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35BA2F72245800C83859 /* NumberComposition.swift */; };
 		FF3F35BD2F72245800C83859 /* MajorIndexRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35BC2F72245800C83859 /* MajorIndexRepository.swift */; };
-		FF3F35BF2F72245800C83859 /* LoadMajorIndexUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35BE2F72245800C83859 /* LoadMajorIndexUseCase.swift */; };
-		FF3F35C12F72245800C83859 /* FindMatchingEntryGroupsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C02F72245800C83859 /* FindMatchingEntryGroupsUseCase.swift */; };
-		FF3F35C32F72245800C83859 /* SelectEntryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C22F72245800C83859 /* SelectEntryUseCase.swift */; };
-		FF3F35C52F72245900C83859 /* RemoveLastBreadcrumbUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C42F72245900C83859 /* RemoveLastBreadcrumbUseCase.swift */; };
 		FF3F35C72F72245900C83859 /* BundledMajorIndexRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C62F72245900C83859 /* BundledMajorIndexRepository.swift */; };
 		FF3F35C92F72245900C83859 /* CreateNumberFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35C82F72245900C83859 /* CreateNumberFeature.swift */; };
 		FFF458262F677519000350EE /* MajorSystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = FFF458252F677519000350EE /* MajorSystemKit */; };
@@ -69,12 +65,9 @@
 		FF3F35B82F72245800C83859 /* MnemonicEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicEntry.swift; sourceTree = "<group>"; };
 		FF3F35BA2F72245800C83859 /* NumberComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberComposition.swift; sourceTree = "<group>"; };
 		FF3F35BC2F72245800C83859 /* MajorIndexRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorIndexRepository.swift; sourceTree = "<group>"; };
-		FF3F35BE2F72245800C83859 /* LoadMajorIndexUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMajorIndexUseCase.swift; sourceTree = "<group>"; };
-		FF3F35C02F72245800C83859 /* FindMatchingEntryGroupsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindMatchingEntryGroupsUseCase.swift; sourceTree = "<group>"; };
-		FF3F35C22F72245800C83859 /* SelectEntryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectEntryUseCase.swift; sourceTree = "<group>"; };
-		FF3F35C42F72245900C83859 /* RemoveLastBreadcrumbUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveLastBreadcrumbUseCase.swift; sourceTree = "<group>"; };
 		FF3F35C62F72245900C83859 /* BundledMajorIndexRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledMajorIndexRepository.swift; sourceTree = "<group>"; };
 		FF3F35C82F72245900C83859 /* CreateNumberFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNumberFeature.swift; sourceTree = "<group>"; };
+		FFA064C32F735FF60074F698 /* ARCHITECTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE.md; sourceTree = "<group>"; };
 		FFF457E42F677355000350EE /* Memry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF457F52F677356000350EE /* MemryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF457FF2F677356000350EE /* MemryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,10 +207,6 @@
 		FF3F35B32F72236C00C83859 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				FF3F35BE2F72245800C83859 /* LoadMajorIndexUseCase.swift */,
-				FF3F35C02F72245800C83859 /* FindMatchingEntryGroupsUseCase.swift */,
-				FF3F35C22F72245800C83859 /* SelectEntryUseCase.swift */,
-				FF3F35C42F72245900C83859 /* RemoveLastBreadcrumbUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -242,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35AB2F7222D200C83859 /* AGENTS.md */,
+				FFA064C32F735FF60074F698 /* ARCHITECTURE.md */,
 				FFF457E62F677355000350EE /* Memry */,
 				FFF457F82F677356000350EE /* MemryTests */,
 				FFF458022F677356000350EE /* MemryUITests */,
@@ -416,7 +406,6 @@
 				FF3F35932F7222B900C83859 /* CreateNumberViewModel.swift in Sources */,
 				FF3F35C92F72245900C83859 /* CreateNumberFeature.swift in Sources */,
 				FF3F35942F7222B900C83859 /* EntryChipView.swift in Sources */,
-				FF3F35C32F72245800C83859 /* SelectEntryUseCase.swift in Sources */,
 				FF3F35B92F72245800C83859 /* MnemonicEntry.swift in Sources */,
 				FF3F35952F7222B900C83859 /* EntryGroupSection.swift in Sources */,
 				FF3F35B72F72245700C83859 /* MatchingEntryGroup.swift in Sources */,
@@ -428,10 +417,7 @@
 				FF3F35BD2F72245800C83859 /* MajorIndexRepository.swift in Sources */,
 				FF3F35A02F7222B900C83859 /* TagFlowLayoutCache.swift in Sources */,
 				FF3F35A12F7222B900C83859 /* TagFlowLayoutElement.swift in Sources */,
-				FF3F35C52F72245900C83859 /* RemoveLastBreadcrumbUseCase.swift in Sources */,
 				FF3F35A22F7222B900C83859 /* TagFlowLayoutRow.swift in Sources */,
-				FF3F35C12F72245800C83859 /* FindMatchingEntryGroupsUseCase.swift in Sources */,
-				FF3F35BF2F72245800C83859 /* LoadMajorIndexUseCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

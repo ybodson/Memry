@@ -6,11 +6,6 @@ enum CreateNumberFeature {
     }
 
     static func makeViewModel() -> CreateNumberViewModel {
-        CreateNumberViewModel(
-            loadMajorIndexUseCase: LoadMajorIndexUseCase(repository: BundledMajorIndexRepository()),
-            findMatchingEntryGroupsUseCase: FindMatchingEntryGroupsUseCase(),
-            selectEntryUseCase: SelectEntryUseCase(),
-            removeLastBreadcrumbUseCase: RemoveLastBreadcrumbUseCase()
-        )
+        CreateNumberViewModel(repository: BundledMajorIndexRepository())
     }
 }

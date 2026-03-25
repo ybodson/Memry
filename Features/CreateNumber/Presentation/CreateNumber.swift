@@ -1,5 +1,4 @@
 import SwiftUI
-import Observation
 
 struct CreateNumber: View {
     @State private var viewModel: CreateNumberViewModel
@@ -47,11 +46,7 @@ struct CreateNumber: View {
                         if viewModel.matchingEntryGroups.isEmpty == false {
                             VStack(alignment: .leading, spacing: 16) {
                                 ForEach(viewModel.matchingEntryGroups) { group in
-                                    EntryGroupSection(
-                                        group: group,
-                                        isTapEnabled: viewModel.isScrollGestureActive == false
-                                    ) { index in
-                                        let entry = group.entries[index]
+                                    EntryGroupSection(group: group) { entry in
                                         viewModel.select(entry, in: group)
                                         scrollToTop(using: proxy)
                                     }
@@ -64,17 +59,6 @@ struct CreateNumber: View {
                 }
                 .scrollDismissesKeyboard(.immediately)
                 .background(Color(.systemGroupedBackground))
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 10)
-                        .onChanged { _ in
-                            viewModel.beginScrollGesture()
-                        }
-                        .onEnded { _ in
-                            Task {
-                                await viewModel.endScrollGesture()
-                            }
-                        }
-                )
             }
         }
     }
