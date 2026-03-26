@@ -30,6 +30,11 @@ final class CreateNumberViewModel {
 
     var matchingEntryGroups: [MatchingEntryGroup] {
         currentComposition.matchingEntryGroups(entriesByCode: entriesByCode)
+            .compactMap { group in
+                let filtered = group.entries.sorted(by: { $0.score > $1.score }) //.filter { $0.score >= 0.0 }
+                guard filtered.isEmpty == false else { return nil }
+                return MatchingEntryGroup(code: group.code, entries: filtered)
+            }
     }
 
     func loadEntriesIfNeeded() async {

@@ -40,8 +40,8 @@ struct MemryTests {
 
     @Test func findMatchingEntryGroupsReturnsDescendingPrefixes() {
         let entriesByCode = [
-            "12": [MnemonicEntry(code: "12", word: "tin")],
-            "1": [MnemonicEntry(code: "1", word: "toe")]
+            "12": [MnemonicEntry(code: "12", word: "tin", score: 1.0)],
+            "1": [MnemonicEntry(code: "1", word: "toe", score: 1.0)]
         ]
         let composition = NumberComposition(textInput: "12", breadcrumbs: [])
 
@@ -51,7 +51,7 @@ struct MemryTests {
     }
 
     @Test func selectEntryAppendsBreadcrumbAndConsumesDigits() {
-        let entry = MnemonicEntry(code: "12", word: "tin")
+        let entry = MnemonicEntry(code: "12", word: "tin", score: 1.0)
         let group = MatchingEntryGroup(code: "12", entries: [entry])
         let composition = NumberComposition(textInput: "1234", breadcrumbs: [])
 
@@ -401,7 +401,7 @@ private final class RetryingMajorIndexRepository: MajorIndexRepository, @uncheck
         }
 
         return [
-            "12": [MnemonicEntry(code: "12", word: "tin")]
+            "12": [MnemonicEntry(code: "12", word: "tin", score: 1.0)]
         ]
     }
 }
