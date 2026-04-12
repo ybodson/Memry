@@ -21,6 +21,12 @@ final class PersistedNumberComposition {
         return NumberComposition(id: compositionID, textInput: "", breadcrumbs: breadcrumbs)
     }
 
+    func update(from composition: NumberComposition) {
+        breadcrumbs = composition.breadcrumbs.enumerated().map { index, breadcrumb in
+            PersistedBreadcrumb(word: breadcrumb.word, code: breadcrumb.code, order: index)
+        }
+    }
+
     static func fromDomain(_ composition: NumberComposition) -> PersistedNumberComposition {
         let breadcrumbs = composition.breadcrumbs.enumerated().map { index, breadcrumb in
             PersistedBreadcrumb(word: breadcrumb.word, code: breadcrumb.code, order: index)

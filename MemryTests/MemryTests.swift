@@ -7,6 +7,7 @@
 
 import CoreData
 import Foundation
+import SwiftData
 import Testing
 @testable import Memry
 
@@ -342,6 +343,59 @@ struct PersistenceMappingTests {
         #expect(composition.number == "1232")
         #expect(composition.phrase == "tin moon")
     }
+
+    @MainActor @Test func repositorySaveUpdatesExistingCompositionInsteadOfDuplicating() throws {
+        let container = try makeInMemoryModelContainer()
+        let repository = SwiftDataNumberCompositionRepository(modelContext: container.mainContext)
+        let id = UUID()
+
+        try repository.save(
+            NumberComposition(
+                id: id,
+                textInput: "",
+                breadcrumbs: [Breadcrumb(word: "tin", code: "12")]
+            )
+        )
+        try repository.save(
+            NumberComposition(
+                id: id,
+                textInput: "",
+                breadcrumbs: [Breadcrumb(word: "moon", code: "32")]
+            )
+        )
+
+        let persisted = try container.mainContext.fetch(FetchDescriptor<PersistedNumberComposition>())
+        let compositions = try repository.fetchAll()
+
+        #expect(persisted.count == 1)
+        #expect(compositions.count == 1)
+        #expect(compositions[0].phrase == "moon")
+        #expect(compositions[0].number == "32")
+    }
+
+    @MainActor @Test func repositoryDeleteRemovesAllRowsForCompositionID() throws {
+        let container = try makeInMemoryModelContainer()
+        let compositionID = UUID()
+        let duplicateOne = PersistedNumberComposition(
+            compositionID: compositionID,
+            breadcrumbs: [PersistedBreadcrumb(word: "tin", code: "12", order: 0)],
+            createdAt: Date(timeIntervalSince1970: 0)
+        )
+        let duplicateTwo = PersistedNumberComposition(
+            compositionID: compositionID,
+            breadcrumbs: [PersistedBreadcrumb(word: "moon", code: "32", order: 0)],
+            createdAt: Date(timeIntervalSince1970: 1)
+        )
+        container.mainContext.insert(duplicateOne)
+        container.mainContext.insert(duplicateTwo)
+        try container.mainContext.save()
+
+        let repository = SwiftDataNumberCompositionRepository(modelContext: container.mainContext)
+        try repository.delete(NumberComposition(id: compositionID, textInput: "", breadcrumbs: []))
+
+        let persisted = try container.mainContext.fetch(FetchDescriptor<PersistedNumberComposition>())
+        #expect(persisted.isEmpty)
+    }
 }
 
 @MainActor
@@ -410,4 +464,14 @@ private struct FakeCloudKitEvent: CloudSyncEvent {
     let type: NSPersistentCloudKitContainer.EventType
     let endDate: Date?
     let error: (any Error)?
+}
+
+@MainActor
+private func makeInMemoryModelContainer() throws -> ModelContainer {
+    let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
+    return try ModelContainer(
+        for: PersistedNumberComposition.self,
+        PersistedBreadcrumb.self,
+        configurations: configuration
+    )
 }
