@@ -12,10 +12,10 @@ The system SHALL display a scrollable list of all saved number compositions. Eac
 - **THEN** a "No Numbers Yet" empty state is shown with a prompt to tap + to add the first number
 
 ### Requirement: Loading skeleton during CloudKit sync
-The system SHALL display a redacted placeholder list while waiting for the initial CloudKit sync to complete, so the user understands data is being fetched rather than absent.
+The system SHALL display a redacted placeholder list during the initial load of the ViewNumbers screen, and continue displaying it while waiting for the initial CloudKit sync to complete if no compositions are available yet.
 
-#### Scenario: Awaiting initial sync with no local data
-- **WHEN** the app launches for the first time and CloudKit sync has not yet completed
+#### Scenario: Initial load has not completed
+- **WHEN** the user opens the ViewNumbers screen and the first composition fetch has not yet completed
 - **THEN** a skeleton list of three placeholder rows is shown in a redacted state
 
 #### Scenario: Sync completes or times out
@@ -26,7 +26,7 @@ The system SHALL display a redacted placeholder list while waiting for the initi
 The system SHALL allow the user to delete a composition via swipe-to-delete. The composition SHALL be removed from both the list and persistent storage.
 
 #### Scenario: User swipes to delete
-- **WHEN** the user swipes left on a composition row and confirms deletion
+- **WHEN** the user performs the swipe-to-delete action on a composition row
 - **THEN** the composition is removed from the list and deleted from the repository
 
 #### Scenario: Deletion fails

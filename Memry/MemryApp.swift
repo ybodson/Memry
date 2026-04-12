@@ -6,6 +6,7 @@ struct MemryApp: App {
     static let cloudKitContainerID = "iCloud.frogmojo.Memry"
 
     private let modelContainer: ModelContainer?
+    private let modelContainerInitializationError: String?
 
     init() {
         do {
@@ -16,8 +17,10 @@ struct MemryApp: App {
                 for: PersistedNumberComposition.self, PersistedBreadcrumb.self,
                 configurations: configuration
             )
+            modelContainerInitializationError = nil
         } catch {
             modelContainer = nil
+            modelContainerInitializationError = error.localizedDescription
         }
     }
 
@@ -35,7 +38,10 @@ struct MemryApp: App {
                 ContentUnavailableView(
                     "Unable to Load Data",
                     systemImage: "exclamationmark.triangle",
-                    description: Text("The app's database could not be initialized. Please restart the app or reinstall if the problem persists.")
+                    description: Text(
+                        modelContainerInitializationError
+                            ?? "The app's database could not be initialized. Please restart the app or reinstall if the problem persists."
+                    )
                 )
             }
         }
