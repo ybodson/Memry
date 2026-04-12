@@ -1,4 +1,4 @@
 # AGENTS.md
 
-For architecture details, see ARCHITECTURE.md
+For architecture details, see ARCHITECTURE.md.
 

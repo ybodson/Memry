@@ -1,8 +1,7 @@
 import Foundation
 import Observation
 
-@Observable
-final class CreateNumberViewModel {
+@Observable @MainActor final class CreateNumberViewModel {
     var textInput: String = "" {
         didSet {
             let normalized = textInput.filter(\.isNumber)
