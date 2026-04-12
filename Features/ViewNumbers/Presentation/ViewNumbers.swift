@@ -1,9 +1,9 @@
 import CoreData
 import SwiftUI
 
-struct Numbers: View {
+struct ViewNumbers: View {
     @Environment(\.scenePhase) private var scenePhase
-    @State var viewModel: NumbersViewModel
+    @State var viewModel: ViewNumbersViewModel
     @State private var isShowingCreateNumber = false
 
     var body: some View {

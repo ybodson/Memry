@@ -10,7 +10,7 @@ protocol CloudSyncEvent {
 
 extension NSPersistentCloudKitContainer.Event: CloudSyncEvent {}
 
-@Observable @MainActor final class NumbersViewModel {
+@Observable @MainActor final class ViewNumbersViewModel {
     private(set) var compositions: [NumberComposition] = []
     private(set) var hasLoaded = false
     private(set) var isAwaitingInitialCloudSync = true

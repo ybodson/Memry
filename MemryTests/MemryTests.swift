@@ -76,13 +76,13 @@ struct MemryTests {
     }
 }
 
-// MARK: - NumbersViewModel Tests
+// MARK: - ViewNumbersViewModel Tests
 
-struct NumbersViewModelTests {
+struct ViewNumbersViewModelTests {
     @MainActor @Test func loadCompositionsPopulatesList() {
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
         let repository = StubNumberCompositionRepository(compositions: [composition])
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
 
         viewModel.loadCompositions()
 
@@ -95,7 +95,7 @@ struct NumbersViewModelTests {
 
     @MainActor @Test func loadCompositionsSetsErrorOnFailure() {
         let repository = StubNumberCompositionRepository(fetchError: StubNumberCompositionRepository.testError)
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
 
         viewModel.loadCompositions()
 
@@ -106,7 +106,7 @@ struct NumbersViewModelTests {
     @MainActor @Test func saveAddsCompositionToFrontOfList() throws {
         let existing = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "moon", code: "32")])
         let repository = StubNumberCompositionRepository(compositions: [existing])
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
         viewModel.loadCompositions()
 
         let newComposition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
@@ -121,7 +121,7 @@ struct NumbersViewModelTests {
     @MainActor @Test func deleteRemovesCompositionFromList() {
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
         let repository = StubNumberCompositionRepository(compositions: [composition])
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
         viewModel.loadCompositions()
 
         #expect(viewModel.compositions.count == 1)
@@ -133,7 +133,7 @@ struct NumbersViewModelTests {
 
     @MainActor @Test func emptyFetchKeepsSkeletonVisibleUntilInitialSyncSettles() {
         let repository = StubNumberCompositionRepository(compositions: [])
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
 
         viewModel.loadCompositions()
 
@@ -147,7 +147,7 @@ struct NumbersViewModelTests {
 
     @MainActor @Test func saveThrowsOnFailure() {
         let repository = StubNumberCompositionRepository(saveError: StubNumberCompositionRepository.testError)
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
 
         #expect(throws: StubNumberCompositionRepository.testError) {
@@ -158,7 +158,7 @@ struct NumbersViewModelTests {
     @MainActor @Test func deleteSetsErrorOnFailure() {
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
         let repository = StubNumberCompositionRepository(compositions: [composition], deleteError: StubNumberCompositionRepository.testError)
-        let viewModel = NumbersViewModel(repository: repository)
+        let viewModel = ViewNumbersViewModel(repository: repository)
         viewModel.loadCompositions()
 
         viewModel.delete(composition)
@@ -172,7 +172,7 @@ struct NumbersViewModelTests {
 
 struct CloudSyncTests {
     @MainActor @Test func showsSkeletonBeforeFirstLoad() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
 
         #expect(viewModel.showsLoadingSkeleton)
         #expect(viewModel.hasLoaded == false)
@@ -180,7 +180,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func showsSkeletonAfterEmptyLoadWhileAwaitingSync() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
 
         viewModel.loadCompositions()
 
@@ -192,7 +192,7 @@ struct CloudSyncTests {
 
     @MainActor @Test func hidesSkeletonWhenCompositionsLoadedEvenDuringSync() {
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
 
         viewModel.loadCompositions()
 
@@ -201,7 +201,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func handleCloudSyncEventIgnoresExportEvents() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
         viewModel.loadCompositions()
 
         let event = FakeCloudKitEvent(type: .export, endDate: Date(), error: nil)
@@ -211,7 +211,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func handleCloudSyncEventTracksImportStart() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
         viewModel.loadCompositions()
 
         let event = FakeCloudKitEvent(type: .import, endDate: nil, error: nil)
@@ -222,7 +222,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func handleCloudSyncEventFinishesSyncOnImportEnd() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
         viewModel.loadCompositions()
 
         let event = FakeCloudKitEvent(type: .import, endDate: Date(), error: nil)
@@ -233,7 +233,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func handleCloudSyncEventCapturesSyncError() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
         viewModel.loadCompositions()
 
         let syncError = NSError(domain: "CloudKit", code: 1, userInfo: [NSLocalizedDescriptionKey: "Sync failed"])
@@ -244,7 +244,7 @@ struct CloudSyncTests {
     }
 
     @MainActor @Test func finishInitialCloudSyncDoesNothingIfSyncEventObserved() {
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: []))
         viewModel.loadCompositions()
 
         let event = FakeCloudKitEvent(type: .import, endDate: nil, error: nil)
@@ -257,7 +257,7 @@ struct CloudSyncTests {
 
     @MainActor @Test func finishInitialCloudSyncDoesNothingIfCompositionsExist() {
         let composition = NumberComposition(textInput: "", breadcrumbs: [Breadcrumb(word: "tin", code: "12")])
-        let viewModel = NumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
+        let viewModel = ViewNumbersViewModel(repository: StubNumberCompositionRepository(compositions: [composition]))
         viewModel.loadCompositions()
 
         viewModel.finishInitialCloudSyncIfStillEmpty()

@@ -24,8 +24,8 @@ struct MemryApp: App {
     var body: some Scene {
         WindowGroup {
             if let modelContainer {
-                Numbers(
-                    viewModel: NumbersViewModel(
+                ViewNumbers(
+                    viewModel: ViewNumbersViewModel(
                         repository: SwiftDataNumberCompositionRepository(
                             modelContext: modelContainer.mainContext
                         )

@@ -15,7 +15,7 @@
 		FF3F35942F7222B900C83859 /* EntryChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F357D2F7222B900C83859 /* EntryChipView.swift */; };
 		FF3F35952F7222B900C83859 /* EntryGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F357E2F7222B900C83859 /* EntryGroupSection.swift */; };
 		FF3F359C2F7222B900C83859 /* NumberInputSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35872F7222B900C83859 /* NumberInputSection.swift */; };
-		FF3F359D2F7222B900C83859 /* Numbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35882F7222B900C83859 /* Numbers.swift */; };
+		FF3F359D2F7222B900C83859 /* ViewNumbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F35882F7222B900C83859 /* ViewNumbers.swift */; };
 		FF3F359F2F7222B900C83859 /* TagFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F358A2F7222B900C83859 /* TagFlowLayout.swift */; };
 		FF3F35A02F7222B900C83859 /* TagFlowLayoutCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F358B2F7222B900C83859 /* TagFlowLayoutCache.swift */; };
 		FF3F35A12F7222B900C83859 /* TagFlowLayoutElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3F358C2F7222B900C83859 /* TagFlowLayoutElement.swift */; };
@@ -30,7 +30,7 @@
 		FFA064C92F736C070074F698 /* PersistedBreadcrumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064C82F736C070074F698 /* PersistedBreadcrumb.swift */; };
 		FFA064CB2F736C080074F698 /* PersistedNumberComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CA2F736C080074F698 /* PersistedNumberComposition.swift */; };
 		FFA064CD2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */; };
-		FFA064CF2F736C3B0074F698 /* NumbersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */; };
+		FFA064CF2F736C3B0074F698 /* ViewNumbersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA064CE2F736C3B0074F698 /* ViewNumbersViewModel.swift */; };
 		FFF458262F677519000350EE /* MajorSystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = FFF458252F677519000350EE /* MajorSystemKit */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +53,7 @@
 		FF3F357D2F7222B900C83859 /* EntryChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryChipView.swift; sourceTree = "<group>"; };
 		FF3F357E2F7222B900C83859 /* EntryGroupSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryGroupSection.swift; sourceTree = "<group>"; };
 		FF3F35872F7222B900C83859 /* NumberInputSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberInputSection.swift; sourceTree = "<group>"; };
-		FF3F35882F7222B900C83859 /* Numbers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numbers.swift; sourceTree = "<group>"; };
+		FF3F35882F7222B900C83859 /* ViewNumbers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNumbers.swift; sourceTree = "<group>"; };
 		FF3F358A2F7222B900C83859 /* TagFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFlowLayout.swift; sourceTree = "<group>"; };
 		FF3F358B2F7222B900C83859 /* TagFlowLayoutCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFlowLayoutCache.swift; sourceTree = "<group>"; };
 		FF3F358C2F7222B900C83859 /* TagFlowLayoutElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFlowLayoutElement.swift; sourceTree = "<group>"; };
@@ -70,7 +70,7 @@
 		FFA064C82F736C070074F698 /* PersistedBreadcrumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedBreadcrumb.swift; sourceTree = "<group>"; };
 		FFA064CA2F736C080074F698 /* PersistedNumberComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedNumberComposition.swift; sourceTree = "<group>"; };
 		FFA064CC2F736C100074F698 /* SwiftDataNumberCompositionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataNumberCompositionRepository.swift; sourceTree = "<group>"; };
-		FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersViewModel.swift; sourceTree = "<group>"; };
+		FFA064CE2F736C3B0074F698 /* ViewNumbersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNumbersViewModel.swift; sourceTree = "<group>"; };
 		FFF457E42F677355000350EE /* Memry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF457F52F677356000350EE /* MemryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -124,7 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				FF3F35AE2F72236400C83859 /* CreateNumber */,
-				FF3F35AF2F72236400C83859 /* Numbers */,
+				FF3F35AF2F72236400C83859 /* ViewNumbers */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -149,13 +149,13 @@
 			path = CreateNumber;
 			sourceTree = "<group>";
 		};
-		FF3F35AF2F72236400C83859 /* Numbers */ = {
+		FF3F35AF2F72236400C83859 /* ViewNumbers */ = {
 			isa = PBXGroup;
 			children = (
 				FF3F35B52F72236C00C83859 /* Presentation */,
 				FFA064C52F736BF60074F698 /* Data */,
 			);
-			path = Numbers;
+			path = ViewNumbers;
 			sourceTree = "<group>";
 		};
 		FF3F35B02F72236500C83859 /* Presentation */ = {
@@ -204,8 +204,8 @@
 		FF3F35B52F72236C00C83859 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				FF3F35882F7222B900C83859 /* Numbers.swift */,
-				FFA064CE2F736C3B0074F698 /* NumbersViewModel.swift */,
+				FF3F35882F7222B900C83859 /* ViewNumbers.swift */,
+				FFA064CE2F736C3B0074F698 /* ViewNumbersViewModel.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -380,8 +380,8 @@
 				FF3F35B72F72245700C83859 /* MatchingEntryGroup.swift in Sources */,
 				FF3F35BB2F72245800C83859 /* NumberComposition.swift in Sources */,
 				FF3F359C2F7222B900C83859 /* NumberInputSection.swift in Sources */,
-				FF3F359D2F7222B900C83859 /* Numbers.swift in Sources */,
-				FFA064CF2F736C3B0074F698 /* NumbersViewModel.swift in Sources */,
+				FF3F359D2F7222B900C83859 /* ViewNumbers.swift in Sources */,
+				FFA064CF2F736C3B0074F698 /* ViewNumbersViewModel.swift in Sources */,
 				FF3F35C72F72245900C83859 /* BundledMajorIndexRepository.swift in Sources */,
 				FF3F359F2F7222B900C83859 /* TagFlowLayout.swift in Sources */,
 				FF3F35BD2F72245800C83859 /* MajorIndexRepository.swift in Sources */,
