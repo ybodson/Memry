@@ -373,6 +373,30 @@ struct PersistenceMappingTests {
         #expect(compositions[0].number == "32")
     }
 
+    @MainActor @Test func repositoryFetchReturnsNewestCompositionsFirst() throws {
+        let container = try makeInMemoryModelContainer()
+        let older = PersistedNumberComposition(
+            compositionID: UUID(),
+            breadcrumbs: [PersistedBreadcrumb(word: "tin", code: "12", order: 0)],
+            createdAt: Date(timeIntervalSince1970: 0)
+        )
+        let newer = PersistedNumberComposition(
+            compositionID: UUID(),
+            breadcrumbs: [PersistedBreadcrumb(word: "moon", code: "32", order: 0)],
+            createdAt: Date(timeIntervalSince1970: 1)
+        )
+        container.mainContext.insert(older)
+        container.mainContext.insert(newer)
+        try container.mainContext.save()
+
+        let repository = SwiftDataNumberCompositionRepository(modelContext: container.mainContext)
+        let compositions = try repository.fetchAll()
+
+        #expect(compositions.count == 2)
+        #expect(compositions[0].number == "32")
+        #expect(compositions[1].number == "12")
+    }
+
     @MainActor @Test func repositoryDeleteRemovesAllRowsForCompositionID() throws {
         let container = try makeInMemoryModelContainer()
         let compositionID = UUID()
