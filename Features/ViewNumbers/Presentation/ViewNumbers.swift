@@ -1,4 +1,3 @@
-import CoreData
 import SwiftUI
 
 struct ViewNumbers: View {
@@ -30,7 +29,7 @@ struct ViewNumbers: View {
                         Text(errorMessage)
                     } actions: {
                         Button("Retry") {
-                            viewModel.loadCompositions()
+                            viewModel.load()
                         }
                     }
                 } else if viewModel.compositions.isEmpty {
@@ -71,19 +70,19 @@ struct ViewNumbers: View {
             }
         }
         .sheet(isPresented: $isShowingCreateNumber) {
-            viewModel.loadCompositions()
+            viewModel.load()
         } content: {
             CreateNumberFeature.makeView(onSave: viewModel.save)
         }
         .onAppear {
-            viewModel.loadCompositions()
+            viewModel.load()
         }
         .task {
-            await viewModel.startObservingCloudSync()
+            await viewModel.observeSync()
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
-                viewModel.loadCompositions()
+                viewModel.load()
             }
         }
     }

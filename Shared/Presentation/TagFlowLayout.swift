@@ -35,19 +35,8 @@ struct TagFlowLayout: Layout {
         subviews: Subviews,
         cache: inout TagFlowLayoutCache
     ) {
-        let rows = rows(for: bounds.width, cache: &cache)
-
-        for row in rows {
-            for element in row.elements {
-                let point = CGPoint(
-                    x: bounds.minX + element.xOffset,
-                    y: bounds.minY + row.yOffset
-                )
-                subviews[element.index].place(
-                    at: point,
-                    proposal: ProposedViewSize(element.size)
-                )
-            }
+        for row in rows(for: bounds.width, cache: &cache) {
+            place(row, in: bounds, subviews: subviews)
         }
     }
 
@@ -61,39 +50,58 @@ struct TagFlowLayout: Layout {
     }
 
     private func arrangeRows(in maxWidth: CGFloat, sizes: [CGSize]) -> [TagFlowLayoutRow] {
+        positionedRows(from: buildRows(in: maxWidth, sizes: sizes))
+    }
+
+    private func place(_ row: TagFlowLayoutRow, in bounds: CGRect, subviews: Subviews) {
+        for element in row.elements {
+            place(element, in: row, bounds: bounds, subviews: subviews)
+        }
+    }
+
+    private func place(_ element: TagFlowLayoutElement, in row: TagFlowLayoutRow, bounds: CGRect, subviews: Subviews) {
+        subviews[element.index].place(at: point(for: element, in: row, bounds: bounds), proposal: ProposedViewSize(element.size))
+    }
+
+    private func point(for element: TagFlowLayoutElement, in row: TagFlowLayoutRow, bounds: CGRect) -> CGPoint {
+        CGPoint(x: bounds.minX + element.xOffset, y: bounds.minY + row.yOffset)
+    }
+
+    private func buildRows(in maxWidth: CGFloat, sizes: [CGSize]) -> [TagFlowLayoutRow] {
         var rows: [TagFlowLayoutRow] = []
-        var currentRow = TagFlowLayoutRow()
+        var row = TagFlowLayoutRow()
+        for (index, size) in sizes.enumerated() { append(size, at: index, to: &row, rows: &rows, maxWidth: maxWidth) }
+        finish(row, into: &rows)
+        return rows
+    }
 
-        for (index, size) in sizes.enumerated() {
-            let proposedX = currentRow.elements.isEmpty ? 0 : currentRow.width + spacing
-            if proposedX + size.width > maxWidth, currentRow.elements.isEmpty == false {
-                currentRow.finalize()
-                rows.append(currentRow)
-                currentRow = TagFlowLayoutRow()
-            }
+    private func append(_ size: CGSize, at index: Int, to row: inout TagFlowLayoutRow, rows: inout [TagFlowLayoutRow], maxWidth: CGFloat) {
+        if wraps(size, in: row, maxWidth: maxWidth) { finish(row, into: &rows); row = TagFlowLayoutRow() }
+        row.add(index: index, size: size, spacing: spacing)
+    }
 
-            currentRow.elements.append(
-                TagFlowLayoutElement(
-                    index: index,
-                    size: size,
-                    xOffset: currentRow.elements.isEmpty ? 0 : currentRow.width + spacing
-                )
-            )
-            currentRow.width = (currentRow.elements.last?.xOffset ?? 0) + size.width
-            currentRow.height = max(currentRow.height, size.height)
-        }
+    private func wraps(_ size: CGSize, in row: TagFlowLayoutRow, maxWidth: CGFloat) -> Bool {
+        row.elements.isEmpty == false && nextX(in: row) + size.width > maxWidth
+    }
 
-        if currentRow.elements.isEmpty == false {
-            currentRow.finalize()
-            rows.append(currentRow)
-        }
+    private func nextX(in row: TagFlowLayoutRow) -> CGFloat {
+        row.elements.isEmpty ? 0 : row.width + spacing
+    }
 
+    private func finish(_ row: TagFlowLayoutRow, into rows: inout [TagFlowLayoutRow]) {
+        guard row.elements.isEmpty == false else { return }
+        rows.append(row)
+    }
+
+    private func positionedRows(from rows: [TagFlowLayoutRow]) -> [TagFlowLayoutRow] {
         var yOffset: CGFloat = 0
-        return rows.map { row in
-            var updatedRow = row
-            updatedRow.yOffset = yOffset
-            yOffset += row.height + spacing
-            return updatedRow
-        }
+        return rows.map { position($0, yOffset: &yOffset) }
+    }
+
+    private func position(_ row: TagFlowLayoutRow, yOffset: inout CGFloat) -> TagFlowLayoutRow {
+        var row = row
+        row.yOffset = yOffset
+        yOffset += row.height + spacing
+        return row
     }
 }

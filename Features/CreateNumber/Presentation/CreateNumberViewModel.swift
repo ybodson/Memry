@@ -37,46 +37,35 @@ import Observation
             }
     }
 
-    func loadEntriesIfNeeded() async {
-        guard entriesByCode.isEmpty else {
-            return
-        }
-
+    func load() async {
+        guard entriesByCode.isEmpty else { return }
         isLoading = true
-
-        do {
-            entriesByCode = try repository.loadEntriesByCode()
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-
-        isLoading = false
+        finishLoading(with: Result(catching: repository.loadEntriesByCode))
     }
 
-    func retryLoading() async {
-        guard entriesByCode.isEmpty else {
-            return
-        }
-
-        await loadEntriesIfNeeded()
+    func retry() async {
+        await load()
     }
 
     func select(_ entry: MnemonicEntry, in group: MatchingEntryGroup) {
         apply(currentComposition.selectingEntry(entry, in: group))
     }
 
-    func removeLastBreadcrumb() {
+    func pop() {
         apply(currentComposition.removingLastBreadcrumb())
     }
 
     func save() -> Bool {
         guard canSave else { return false }
+        return save(currentComposition)
+    }
+
+    private func save(_ composition: NumberComposition) -> Bool {
         do {
-            try onSave(currentComposition)
+            try onSave(composition)
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            setError(error)
             return false
         }
     }
@@ -88,5 +77,22 @@ import Observation
     private func apply(_ composition: NumberComposition) {
         textInput = composition.textInput
         breadcrumbs = composition.breadcrumbs
+    }
+
+    private func finishLoading(with result: Result<[String: [MnemonicEntry]], Error>) {
+        switch result {
+        case .success(let entries): set(entries)
+        case .failure(let error): setError(error)
+        }
+        isLoading = false
+    }
+
+    private func set(_ entries: [String: [MnemonicEntry]]) {
+        entriesByCode = entries
+        errorMessage = nil
+    }
+
+    private func setError(_ error: any Error) {
+        errorMessage = error.localizedDescription
     }
 }
