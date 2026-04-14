@@ -13,6 +13,7 @@ import Observation
     private(set) var breadcrumbs: [Breadcrumb] = []
     var isLoading = true
     var errorMessage: String?
+    var saveErrorMessage: String?
 
     private var entriesByCode: [String: [MnemonicEntry]] = [:]
     private let repository: any MajorIndexRepository
@@ -76,7 +77,7 @@ import Observation
             try onSave(currentComposition)
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            saveErrorMessage = error.localizedDescription
             return false
         }
     }

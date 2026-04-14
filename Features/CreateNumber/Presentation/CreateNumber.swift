@@ -11,6 +11,17 @@ struct CreateNumber: View {
         return NavigationStack {
             content(textInput: $bindableViewModel.textInput)
                 .navigationTitle("New Number")
+                .alert(
+                    "Unable to Save",
+                    isPresented: Binding(
+                        get: { viewModel.saveErrorMessage != nil },
+                        set: { if !$0 { viewModel.saveErrorMessage = nil } }
+                    )
+                ) {
+                    Button("OK") { viewModel.saveErrorMessage = nil }
+                } message: {
+                    Text(viewModel.saveErrorMessage ?? "")
+                }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button {
@@ -43,7 +54,7 @@ struct CreateNumber: View {
             ProgressView()
         } else if let errorMessage = viewModel.errorMessage {
             ContentUnavailableView {
-                Label("Unable to Load Numbers", systemImage: "exclamationmark.triangle")
+                Label("Unable to Load Entries", systemImage: "exclamationmark.triangle")
             } description: {
                 Text(errorMessage)
             } actions: {
