@@ -1,37 +1,26 @@
-import SwiftData
 import SwiftUI
 
 @main
 struct MemryApp: App {
-    static let cloudKitContainerID = "iCloud.frogmojo.Memry"
-
-    private let modelContainer: ModelContainer?
-    private let modelContainerInitializationError: String?
+    private let repository: SwiftDataNumberCompositionRepository?
+    private let initializationError: String?
 
     init() {
         do {
-            let configuration = ModelConfiguration(
-                cloudKitDatabase: .private(Self.cloudKitContainerID)
-            )
-            modelContainer = try ModelContainer(
-                for: PersistedNumberComposition.self, PersistedBreadcrumb.self,
-                configurations: configuration
-            )
-            modelContainerInitializationError = nil
+            repository = try SwiftDataNumberCompositionRepository()
+            initializationError = nil
         } catch {
-            modelContainer = nil
-            modelContainerInitializationError = error.localizedDescription
+            repository = nil
+            initializationError = error.localizedDescription
         }
     }
 
     var body: some Scene {
         WindowGroup {
-            if let modelContainer {
+            if let repository {
                 ViewNumbers(
                     viewModel: ViewNumbersViewModel(
-                        repository: SwiftDataNumberCompositionRepository(
-                            modelContext: modelContainer.mainContext
-                        )
+                        repository: repository
                     )
                 )
             } else {
@@ -39,7 +28,7 @@ struct MemryApp: App {
                     "Unable to Load Data",
                     systemImage: "exclamationmark.triangle",
                     description: Text(
-                        modelContainerInitializationError
+                        initializationError
                             ?? "The app's database could not be initialized. Please restart the app or reinstall if the problem persists."
                     )
                 )
